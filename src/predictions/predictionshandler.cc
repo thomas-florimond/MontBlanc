@@ -337,8 +337,15 @@ namespace MontBlanc
             double Qmax;
             if (_obs == NangaParbat::DataHandler::Observable::dsigma_dxdydz)
               {
-                Qmin = std::max(sqrt(_bins[i].xmin * _bins[i].ymin) * Vs, DH.GetKinematics().var1b.first);
-                Qmax = sqrt(_bins[i].xmax * _bins[i].ymax) * Vs;
+		double ybmin = _bins[i].ymin;
+		double ybmax = _bins[i].ymax;
+		double Mp = apfel::ProtonMass;
+		if (_bins[i].numin > 0)
+		  ybmin = std::max(_bins[i].ymin, 2 * Mp * _bins[i].numin / pow(Vs, 2));
+		if (_bins[i].numax > 0)
+		  ybmax = std::min(_bins[i].ymax, 2 * Mp * _bins[i].numax / pow(Vs, 2));
+                Qmin = std::max(sqrt(_bins[i].xmin * ybmin) * Vs, DH.GetKinematics().var1b.first);
+                Qmax = sqrt(_bins[i].xmax * ybmax) * Vs;
               }
             else if (_obs == NangaParbat::DataHandler::Observable::dsigma_dxdQdz)
               {
@@ -372,8 +379,15 @@ namespace MontBlanc
               double xbmax;
               if (_obs == NangaParbat::DataHandler::Observable::dsigma_dxdydz)
                 {
-                  xbmin = std::max(_bins[i].xmin, pow(Q / Vs, 2) / _bins[i].ymax);
-                  xbmax = std::min(_bins[i].xmax, pow(Q / Vs, 2) / _bins[i].ymin);
+		  double ybmin = _bins[i].ymin;
+		  double ybmax = _bins[i].ymax;
+		  double Mp = apfel::ProtonMass;
+		  if (_bins[i].numin > 0)
+		    ybmin = std::max(_bins[i].ymin, 2 * Mp * _bins[i].numin / pow(Vs, 2));
+		  if (_bins[i].numax > 0)
+		    ybmax = std::min(_bins[i].ymax, 2 * Mp * _bins[i].numax / pow(Vs, 2));
+                  xbmin = std::max(_bins[i].xmin, pow(Q / Vs, 2) / ybmax);
+                  xbmax = std::min(_bins[i].xmax, pow(Q / Vs, 2) / ybmin);
                   if (DH.GetKinematics().PSRed)
                     xbmax = std::min(xbmax, 1 / ( 1 + pow(DH.GetKinematics().pTMin / Q, 2) ));
                 }
@@ -400,8 +414,15 @@ namespace MontBlanc
               double xbmax;
               if (_obs == NangaParbat::DataHandler::Observable::dsigma_dxdydz)
                 {
-                  xbmin = std::max(_bins[i].xmin, pow(Q / Vs, 2) / _bins[i].ymax);
-                  xbmax = std::min(_bins[i].xmax, pow(Q / Vs, 2) / _bins[i].ymin);
+		  double ybmin = _bins[i].ymin;
+		  double ybmax = _bins[i].ymax;
+		  double Mp = apfel::ProtonMass;
+		  if (_bins[i].numin > 0)
+		    ybmin = std::max(_bins[i].ymin, 2 * Mp * _bins[i].numin / pow(Vs, 2));
+		  if (_bins[i].numax > 0)
+		    ybmax = std::min(_bins[i].ymax, 2 * Mp * _bins[i].numax / pow(Vs, 2));
+                  xbmin = std::max(_bins[i].xmin, pow(Q / Vs, 2) / ybmax);
+                  xbmax = std::min(_bins[i].xmax, pow(Q / Vs, 2) / ybmin);
                   if (DH.GetKinematics().PSRed)
                     xbmax = std::min(xbmax, 1 / ( 1 + pow(DH.GetKinematics().pTMin / Q, 2) ));
                 }
